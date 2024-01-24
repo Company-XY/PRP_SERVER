@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post("/login", login);
 router.post("/signup", signup);
-router.post("/assign/:userId", assignRole);
+router.patch("/assign/:adminId/:userId", assignRole);
 
 export default router;
