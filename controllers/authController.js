@@ -18,7 +18,9 @@ const signup = asyncHandler(async (req, res) => {
   const { username, email, password, role } = req.body;
 
   if (!username || !email || !password || !role) {
-    return res.status(400).json("Fill in all the details to create an account");
+    return res
+      .status(400)
+      .json({ error: "Fill in all the details to create an account" });
   }
 
   try {
@@ -78,34 +80,31 @@ const login = asyncHandler(async (req, res) => {
     } else {
       res.status(401).json({ error: "No user with that email" });
     }
-  } catch (err) {
-    res.status(400).json({ error: "Login failed" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
 // Function to assign a role to a user
 const assignRole = asyncHandler(async (req, res) => {
-  const { userId } = req.params;
+  const { adminId, userId } = req.params;
   const { role } = req.body;
 
   try {
-    const requestingUserId = userId;
+    const requestingAdmin = await User.findById(adminId);
 
-    const requestingUser = await User.findById(requestingUserId);
-
-    if (!requestingUser || requestingUser.role !== "admin") {
+    if (!requestingAdmin || requestingAdmin.role !== "Admin") {
       return res
         .status(403)
         .json({ error: "Permission denied. Only admins can assign roles." });
     }
 
-    const validRoles = ["admin", "editor", "support"];
+    const validRoles = ["Admin", "Editor", "Support"];
 
     if (!validRoles.includes(role)) {
       return res.status(400).json({ error: "Invalid role" });
     }
 
-    // Update the user's role
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { role },
@@ -121,4 +120,5 @@ const assignRole = asyncHandler(async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 export { signup, login, assignRole };
