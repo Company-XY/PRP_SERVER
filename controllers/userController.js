@@ -4,6 +4,7 @@ import asyncHandler from "express-async-handler";
 
 
 //Get all users
+// public route
 const getAllUsers = asyncHandler(async (req, res) => {
   try {
     const users = await User.find();
