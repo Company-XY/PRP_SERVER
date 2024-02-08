@@ -23,7 +23,7 @@ mongosoe
   .then(() => {
     app.listen(PORT, () => {
       console.log(
-        `Database Connected and Server Running on Port: ${PORT}...@Company_XY`
+        `Database Connected and Server Running on Port: ${PORT}...@PRP`
       );
     });
   })
